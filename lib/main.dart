@@ -5,37 +5,37 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-Future<List<Dsn>> fetchDsns(http.Client client) async {
+Future<List<Pegawai>> fetchPegawais(http.Client client) async {
   final response =
       await client.get('https://randafirnando.000webhostapp.com/readDatajson.php');
 
-  // Use the compute function to run parseDsns in a separate isolate.
-  return compute(parseDsns, response.body);
+  // Use the compute function to run parsePegawais in a separate isolate.
+  return compute(parsePegawais, response.body);
 }
 
-// A function that converts a response body into a List<Dsn>.
-List<Dsn> parseDsns(String responseBody) {
+// A function that converts a response body into a List<Pegawai>.
+List<Pegawai> parsePegawais(String responseBody) {
   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
 
-  return parsed.map<Dsn>((json) => Dsn.fromJson(json)).toList();
+  return parsed.map<Pegawai>((json) => Pegawai.fromJson(json)).toList();
 }
 
-class Dsn {
-  final String nidn;
-  final String nama_dosen;
-  final String jenjang_akademik;
+class Pegawai {
+  final String nip;
+  final String nama_pegawai;
+  final String depatemen;
+  final String jabatan;
   final String pendidikan_terakhir;
-  final String home_base;
 
-  Dsn({this.nidn, this.nama_dosen, this.jenjang_akademik, this.pendidikan_terakhir, this.home_base});
+  Pegawai({this.nidn, this.nama_dosen, this.jenjang_akademik, this.pendidikan_terakhir, this.home_base});
 
-  factory Dsn.fromJson(Map<String, dynamic> json) {
-    return Dsn(
-      nidn: json['nidn'] as String,
-      nama_dosen: json['nama_dosen'] as String,
-      jenjang_akademik: json['jenjang_akademik'] as String,
+  factory Pegawai.fromJson(Map<String, dynamic> json) {
+    return Pegawai(
+      nip: json['nip'] as String,
+      nama_pegawai: json['nama_pegawai'] as String,
+      depatemen: json['depatemen'] as String,
+      jabatan: json['jabatan'] as String,
       pendidikan_terakhir: json['pendidikan_terakhir'] as String,
-      home_base: json['home_base'] as String,
     );
   }
 }
@@ -65,13 +65,13 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
       ),
-      body: FutureBuilder<List<Dsn>>(
-        future: fetchDsns(http.Client()),
+      body: FutureBuilder<List<Pegawai>>(
+        future: fetchPegawais(http.Client()),
         builder: (context, snapshot) {
           if (snapshot.hasError) print(snapshot.error);
 
           return snapshot.hasData
-              ? DsnsList(DsnData: snapshot.data)
+              ? PegawaisList(PegawaiData: snapshot.data)
               : Center(child: CircularProgressIndicator());
         },
       ),
@@ -79,10 +79,10 @@ class MyHomePage extends StatelessWidget {
   }
 }
 
-class DsnsList extends StatelessWidget {
-  final List<Dsn> DsnData;
+class PegawaisList extends StatelessWidget {
+  final List<Pegawai> PegawaiData;
 
-  DsnsList({Key key, this.DsnData}) : super(key: key);
+  PegawaisList({Key key, this.PegawaiData}) : super(key: key);
 
 
 
@@ -94,7 +94,7 @@ return Container(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
       ),
-      color: Colors.green,
+      color: Colors.yellow,
       elevation: 10,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -117,8 +117,8 @@ return Container(
            //leading: Image.network(
              //   "https://elearning.binadarma.ac.id/pluginfile.php/1/theme_lambda/logo/1602057627/ubd_logo.png",
              // ),
-            title: Text(data[index].nidn, style: TextStyle(color: Colors.white)),
-            subtitle: Text(data[index].nama_dosen, style: TextStyle(color: Colors.white)),
+            title: Text(data[index].nip, style: TextStyle(color: Colors.white)),
+            subtitle: Text(data[index].nama_pegawai, style: TextStyle(color: Colors.white)),
           ),
           ButtonTheme.bar(
             child: ButtonBar(
@@ -146,9 +146,9 @@ return Container(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
       ),
-      itemCount: DsnData.length,
+      itemCount: PegawaiData.length,
       itemBuilder: (context, index) {
-        return viewData(DsnData,index);
+        return viewData(PegawaiData,index);
       },
     );
   }
