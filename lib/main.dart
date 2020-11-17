@@ -95,7 +95,7 @@ return Container(
         borderRadius: BorderRadius.circular(15.0),
       ),
       color: Colors.yellow,
-      elevation: 10,
+      elevation: 15,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
@@ -117,18 +117,18 @@ return Container(
            //leading: Image.network(
              //   "https://elearning.binadarma.ac.id/pluginfile.php/1/theme_lambda/logo/1602057627/ubd_logo.png",
              // ),
-            title: Text(data[index].nip, style: TextStyle(color: Colors.white)),
-            subtitle: Text(data[index].nama_pegawai, style: TextStyle(color: Colors.white)),
+            title: Text(data[index].nip, style: TextStyle(color: Colors.black)),
+            subtitle: Text(data[index].nama_pegawai, style: TextStyle(color: Colors.black)),
           ),
           ButtonTheme.bar(
             child: ButtonBar(
               children: <Widget>[
                 FlatButton(
-                  child: const Text('Edit', style: TextStyle(color: Colors.white)),
+                  child: const Text('Edit', style: TextStyle(color: Colors.black)),
                   onPressed: () {},
                 ),
                 FlatButton(
-                  child: const Text('Delete', style: TextStyle(color: Colors.white)),
+                  child: const Text('Delete', style: TextStyle(color: Colors.black)),
                   onPressed: () {},
                 ),
               ],
