@@ -27,7 +27,7 @@ class Pegawai {
   final String jabatan;
   final String pendidikan_terakhir;
 
-  Pegawai({this.nidn, this.nama_dosen, this.jenjang_akademik, this.pendidikan_terakhir, this.home_base});
+  Pegawai({this.nip, this.nama_pegawai, this.depatemen, this.jabatan, this.pendidikan_terakhir});
 
   factory Pegawai.fromJson(Map<String, dynamic> json) {
     return Pegawai(
