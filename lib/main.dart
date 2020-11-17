@@ -5,37 +5,37 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-Future<List<Mhs>> fetchMhss(http.Client client) async {
+Future<List<Dsn>> fetchDsns(http.Client client) async {
   final response =
       await client.get('https://randafirnando.000webhostapp.com/readDatajson.php');
 
-  // Use the compute function to run parseMhss in a separate isolate.
-  return compute(parseMhss, response.body);
+  // Use the compute function to run parseDsns in a separate isolate.
+  return compute(parseDsns, response.body);
 }
 
-// A function that converts a response body into a List<Mhs>.
-List<Mhs> parseMhss(String responseBody) {
+// A function that converts a response body into a List<Dsn>.
+List<Dsn> parseDsns(String responseBody) {
   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
 
-  return parsed.map<Mhs>((json) => Mhs.fromJson(json)).toList();
+  return parsed.map<Dsn>((json) => Dsn.fromJson(json)).toList();
 }
 
-class Mhs {
-  final String nim;
-  final String nama;
-  final String kelas;
-  final String kdmatkul;
-  final String email;
+class Dsn {
+  final String nidn;
+  final String nama_dosen;
+  final String jenjang_akademik;
+  final String pendidikan_terakhir;
+  final String home_base;
 
-  Mhs({this.nim, this.nama, this.kelas, this.kdmatkul, this.email});
+  Dsn({this.nidn, this.nama_dosen, this.jenjang_akademik, this.pendidikan_terakhir, this.home_base});
 
-  factory Mhs.fromJson(Map<String, dynamic> json) {
-    return Mhs(
-      nim: json['nim'] as String,
-      nama: json['nama'] as String,
-      kelas: json['kelas'] as String,
-      kdmatkul: json['kdmatkul'] as String,
-      email: json['email'] as String,
+  factory Dsn.fromJson(Map<String, dynamic> json) {
+    return Dsn(
+      nidn: json['nidn'] as String,
+      nama_dosen: json['nama_dosen'] as String,
+      jenjang_akademik: json['jenjang_akademik'] as String,
+      pendidikan_terakhir: json['pendidikan_terakhir'] as String,
+      home_base: json['home_base'] as String,
     );
   }
 }
@@ -65,13 +65,13 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
       ),
-      body: FutureBuilder<List<Mhs>>(
-        future: fetchMhss(http.Client()),
+      body: FutureBuilder<List<Dsn>>(
+        future: fetchDsns(http.Client()),
         builder: (context, snapshot) {
           if (snapshot.hasError) print(snapshot.error);
 
           return snapshot.hasData
-              ? MhssList(MhsData: snapshot.data)
+              ? DsnsList(DsnData: snapshot.data)
               : Center(child: CircularProgressIndicator());
         },
       ),
@@ -79,10 +79,10 @@ class MyHomePage extends StatelessWidget {
   }
 }
 
-class MhssList extends StatelessWidget {
-  final List<Mhs> MhsData;
+class DsnsList extends StatelessWidget {
+  final List<Dsn> DsnData;
 
-  MhssList({Key key, this.MhsData}) : super(key: key);
+  DsnsList({Key key, this.DsnData}) : super(key: key);
 
 
 
@@ -94,7 +94,7 @@ return Container(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
       ),
-      color: Colors.yellow,
+      color: Colors.green,
       elevation: 10,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -117,18 +117,18 @@ return Container(
            //leading: Image.network(
              //   "https://elearning.binadarma.ac.id/pluginfile.php/1/theme_lambda/logo/1602057627/ubd_logo.png",
              // ),
-            title: Text(data[index].nim, style: TextStyle(color: Colors.black)),
-            subtitle: Text(data[index].nama, style: TextStyle(color: Colors.black)),
+            title: Text(data[index].nidn, style: TextStyle(color: Colors.white)),
+            subtitle: Text(data[index].nama_dosen, style: TextStyle(color: Colors.white)),
           ),
           ButtonTheme.bar(
             child: ButtonBar(
               children: <Widget>[
                 FlatButton(
-                  child: const Text('Edit', style: TextStyle(color: Colors.black)),
+                  child: const Text('Edit', style: TextStyle(color: Colors.white)),
                   onPressed: () {},
                 ),
                 FlatButton(
-                  child: const Text('Delete', style: TextStyle(color: Colors.black)),
+                  child: const Text('Delete', style: TextStyle(color: Colors.white)),
                   onPressed: () {},
                 ),
               ],
@@ -146,9 +146,9 @@ return Container(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
       ),
-      itemCount: MhsData.length,
+      itemCount: DsnData.length,
       itemBuilder: (context, index) {
-        return viewData(MhsData,index);
+        return viewData(DsnData,index);
       },
     );
   }
